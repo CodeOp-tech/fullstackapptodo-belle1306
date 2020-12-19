@@ -4,6 +4,7 @@ const mysql = require("mysql");
 module.exports = async function db(query) {
   const results = {
     data: [],
+    insertId: 0,
     error: null
   };
   let promise = await new Promise((resolve, reject) => {
@@ -32,8 +33,9 @@ module.exports = async function db(query) {
           con.end();
           return;
         }
-
+        console.log("Result:", result); //actual result from db
         if (!result.length) {
+          //if result not empty
           if (result.affectedRows === 0) {
             results.error = "Action not complete";
             console.log(err);
@@ -41,6 +43,7 @@ module.exports = async function db(query) {
             con.end();
             return;
           }
+          results.insertId = result.insertId;
 
           // push the result (which should be an OkPacket) to data
           // germinal - removed next line because it returns an array in an array when empty set

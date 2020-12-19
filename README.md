@@ -62,10 +62,10 @@ Suggested Process:
 
 To Do:
 
-- [ ] Use Postman to confirm that you have completed these correctly
-- [ ] GET `/api/todos` should retrieve all resources.
+- [ /] Use Postman to confirm that you have completed these correctly
+- [ /] GET `/api/todos` should retrieve all resources.
   - This route is almost complete!
-- [ ] POST `/api/todos` should create a new resource.
+- [] POST `/api/todos` should create a new resource.
   - To test that your query is correct, check to see if your new resource exists using `mysql`.
   - To test your route, use Postman to see if GET `api/todos` returns your new resources.
 - [ ] PUT `/api/todos/:id` should replace a resource.
