@@ -6,8 +6,10 @@ class App extends React.Component {
     super(props);
     this.state = {
       input: "",
-      tasks: []
+      tasks: [],
+      complete: 0
     };
+    this.updateInput = this.updateInput.bind(this);
     this.addTask = this.addTask.bind(this);
     this.updateTask = this.updateTask.bind(this);
     this.deleteTask = this.deleteTask.bind(this);
@@ -58,20 +60,20 @@ class App extends React.Component {
               complete: this.state.complete
             }
           ];
-          this.set
-            .state({
-              tasks: [...this.state.tasks, ...newItem]
-            })
-            .catch(error => {
-              console.log(error);
-            });
+          this.setState({
+            tasks: [...this.state.tasks, ...newItem]
+          });
+          console.log(this.state.tasks);
+        })
+        .catch(error => {
+          console.log(error);
         })
 
       //   // Continue fetch request here
     });
   }
 
-  updateTask() {
+  updateTask(e) {
     // update this.state.task.push(what i get frm json)
     // upon success, update tasks
     // upon failure, show error message
@@ -100,13 +102,11 @@ class App extends React.Component {
               complete: this.state.complete
             }
           ];
-          this.set
-            .state({
-              tasks: [...this.state.tasks, ...updatedItem]
-            })
-            .catch(error => {
-              console.log(error);
-            });
+          this.setstate({ tasks: [...this.state.tasks, ...updatedItem] });
+          console.log(this.state.tasks);
+        })
+        .catch(error => {
+          console.log(error);
         })
     });
   }
@@ -124,8 +124,18 @@ class App extends React.Component {
         text: this.state.input,
         complete: this.state.complete
       })
-        .then(res => res.json())
-        //this.setState({tasks: i})
+        .then(res => {
+          console.log(res.json);
+          return res.json();
+        })
+        .then(data => {
+          //refresh data
+          console.log(data);
+          //const list = [...this.state.input];
+          //const updatedList = list.filter(item => item.id !==id)
+          this.setState({ data: data });
+        })
+
         .catch(error => {
           // upon failure, show error message
           //res.status(500).send(error);
@@ -134,19 +144,26 @@ class App extends React.Component {
     });
   }
 
+  // deleteItem(id){
+  //   const list = [...this.state.list];
+
+  //   const updatedList = list.filter(item => item.id !==id)
+  //   this.setState({list: updatedList});
+  // }
+
   render() {
     //const allTask = this.state.tasks
     return (
-      <div>
+      <div className="App">
         <h1>Christmas To Do List</h1>
-
+        Number of tasks are {this.state.tasks.length}
         <div>
           <label>
             My New Task:
             <input
               type="text"
               placeholder="type task here"
-              value={this.state.tasks}
+              value={this.state.input}
               onChange={e => this.updateInput(e)}
             />
           </label>
@@ -155,48 +172,61 @@ class App extends React.Component {
         <div>
           {this.state.tasks.map(e => {
             return (
-              <li key={e.text}>
-                {e.value}
-                <button onClick={() => this.deleteItem(this.state.id)}>
-                  Delete
-                </button>
+              <li key={e.text} id={e.id} complete={e.completed}>
+                <span className={e.completed ? "crossed-line" : ""}>
+                  {e.text}
+                </span>
+                <input
+                  type="checkbox"
+                  className="form-control"
+                  checked={e.completed}
+                  onChange={() => this.updateInput(e.text)}
+                />
               </li>
             );
           })}
         </div>
-        <button
-          onClick={this.updateTask.bind(
-            this,
-            this.state.id,
-            this.state.text,
-            this.state.complete
-          )}
-        >
-          Edit
-        </button>
-        <div>
-          {/* <button>
-            Delete
-            {this.deleteTask.bind(this, this.state.id)}
-          </button>
-          Delete */}
-        </div>
+        <button onClick={e => this.updateTask()}>Edit</button>
+        <div></div>
       </div>
     );
   }
 }
 export default App;
 
-// ul>
-//            {this.state.list.map(item=>{
-//               return(
-//                 <li key={item.id}>
-//                 {item.value}
-//                 <button
-//                   onClick={()=>this.deleteItem(item.id)}
-//                 >
-//                 Delete
-//                 </button>
-//               </li>
-//               )
-//            })}
+// render() {
+//   return (
+//     <div className="App">
+//       <h2>To Do List</h2>
+//       <div>
+//         <h3>Monday to Friday</h3>
+//         <input
+//           type="text"
+//           placeholder="type task here..."
+//           value={this.state.newItem}
+//           onChange={(e =>this.updateInput("newItem", e.target.value))}
+//         />
+//         <button
+//           onClick={() =>this.addTask()}
+//           >
+//         Add Task
+//         </button>
+//         <ul>
+//          {this.state.list.map(item=>{
+//             return(
+//               <li key={item.id}>
+//               {item.value}
+//               <button
+//                 onClick={()=>this.deleteItem(item.id)}
+//               >
+//               Delete
+//               </button>
+//             </li>
+//             )
+//          })}
+
+//         </ul>
+//     </div>
+//   </div>
+//   )
+// };

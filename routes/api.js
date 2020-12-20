@@ -11,7 +11,7 @@ router.get("/", (req, res) => {
 
 router.get("/todos", (req, res) => {
   // Send back the full list of items
-  db("SELECT * FROM items ORDER BY id ASC;")
+  db(`SELECT * FROM items ORDER BY id ASC`)
     .then(results => {
       res.send(results.data);
     })
@@ -24,11 +24,7 @@ router.post("/todos", (req, res) => {
   // Add your code here
   const newText = req.body.text;
   const newComplete = req.body.complete;
-  db(
-    `INSERT INTO items (text, complete) VALUES(${JSON.stringify(
-      newText
-    )}, ${newComplete});`
-  ) //check how to stringify
+  db(`INSERT INTO items (text, complete) VALUES(${newText}, ${newComplete});`) //check how to stringify//db(`INSERT INTO items (text,complete) VALUES(${JSON.stringify(newText)}, ${newComplete});`)
     .then(results => {
       results.data = results.insertId;
       console.log(results, insertId, "is the id, also data: \n", results.data);
